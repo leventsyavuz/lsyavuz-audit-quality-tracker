@@ -111,23 +111,15 @@ function wplat_add_admin_menu() {
     );
 }
 
-// GÜNCELLENEN BÖLÜM: Harici dosyalar yerine yerel "assets" klasörünü çağırıyoruz
 add_action( 'admin_enqueue_scripts', 'wplat_enqueue_admin_assets' );
 function wplat_enqueue_admin_assets( $hook ) {
     if ( $hook != 'toplevel_page_wplat-dashboard' ) {
         return;
     }
 
-    // 1. Chart.js (Yerel Klasörden)
     wp_enqueue_script( 'chart-js', plugin_dir_url( __FILE__ ) . 'assets/js/chart.min.js', array(), '3.9.1', true );
-    
-    // 2. Admin CSS
     wp_enqueue_style( 'lsaqt-admin-style', plugin_dir_url( __FILE__ ) . 'assets/css/admin-style.css', array(), '1.0.0' );
-
-    // 3. Admin JS
     wp_enqueue_script( 'lsaqt-admin-script', plugin_dir_url( __FILE__ ) . 'assets/js/admin-script.js', array('chart-js'), '1.0.0', true );
-    
-    // AJAX değişkenleri
     wp_localize_script( 'lsaqt-admin-script', 'wplat_ajax', array(
         'ajax_url' => admin_url( 'admin-ajax.php' ),
         'nonce'    => wp_create_nonce( 'wplat_dashboard_nonce' )
@@ -226,7 +218,6 @@ function wplat_ajax_get_dashboard_data() {
             $table_html .= '</tr>';
         }
     } else {
-        // GÜNCELLENEN BÖLÜM: Çeviri altyapısına uyumlu hale getirildi
         $table_html .= '<tr><td colspan="4">' . esc_html__( 'No records found in this date range.', 'lsyavuz-audit-quality-tracker' ) . '</td></tr>';
     }
     
